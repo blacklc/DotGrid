@@ -13,9 +13,9 @@ jobs:
   package:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.11"
 
@@ -41,7 +41,17 @@ jobs:
 
       - name: Package the addon folder exactly as users install it
         run: |
-          cd DotGrid && zip -r "../DotGrid-${{ steps.ver.outputs.version }}.zip" . -x '*.bak' -x '*__pycache__*'
+          zip -r "DotGrid-${{ steps.ver.outputs.version }}.zip" DotGrid -x '*.bak' -x '*__pycache__*'
+          python - <<'PY'
+          import zipfile
+          z = zipfile.ZipFile("DotGrid-${{ steps.ver.outputs.version }}.zip")
+          names = z.namelist()
+          ok = all(n.startswith("DotGrid/") for n in names if n.strip())
+          print("entries:", len(names))
+          if not ok or "DotGrid/DotGrid.toc" not in names:
+              raise SystemExit("zip 里必须是 DotGrid/ 开头（用户解压即得 AddOns/DotGrid/）")
+          print("packaging OK")
+          PY
 
       - name: Publish the release
         uses: softprops/action-gh-release@v2
