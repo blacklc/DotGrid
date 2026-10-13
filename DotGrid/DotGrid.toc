@@ -1,0 +1,16 @@
+## Interface: 120100
+## Title: DotGrid — 范围内 debuff 占比
+## Notes: Shows as a bar or grid how many mobs in melee range carry the debuff(s) you watch (up to 4 spell IDs): one segment per mob, red = hit. 12.x-legal - reads no aura data, draws only its own geometry.
+## Notes-enUS: Shows as a bar or grid how many mobs in melee range carry the debuff(s) you watch (up to 4 spell IDs): one segment per mob, red = hit. 12.x-legal - reads no aura data, draws only its own geometry.
+## Notes-zhCN: 近战范围内的 debuff 占比条 / 格子：段数 = 怪数，红段 = 带你所监控法术（最多 4 个）的怪。12.x 合法实现：不读取光环数据，只画自己的图形。
+## Author: blacklc
+## Version: 0.9.17
+## SavedVariables: DotGridDB
+## IconTexture: Interface\ICONS\Ability_Hunter_MarkedForDeath
+## X-License: MIT
+## X-Category: Combat
+
+DotGrid.xml
+DotGrid.lua
+Locales\enUS.lua
+DotGridUI.lua

@@ -1,0 +1,9 @@
+# 仓库里统一 LF；Windows 上的 git 不再做 CRLF 转换，避免无意义的整文件 diff
+* text=auto eol=lf
+
+# 二进制资源
+*.png binary
+*.jpg binary
+*.gif binary
+*.mp4 binary
+*.zip binary

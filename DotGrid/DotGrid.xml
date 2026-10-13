@@ -1,0 +1,21 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <!--
+        DotGrid 的 AuraButton 模板（红标记的唯一来源）。
+        关键 1：填充贴图必须在模板里预声明。AuraButton 一旦被暴雪的 AuraContainer
+                初始化（initializeFrame）之后，其成员就是受限的，运行时无法再补建。
+        关键 2：整块填充就是一张纯白贴图（WHITE8X8），形状与颜色全靠 DotGrid.lua
+                在 initializeFrame 里 SetSize + SetVertexColor —— 不依赖任何自制贴图。
+        关键 3：这里的尺寸只是"刚创建时"的值，真正的尺寸由 initializeFrame
+                按当前显示方式（进度条 / 格子）逐只重设。
+    -->
+    <Frame name="DotGridAuraButtonTemplate" virtual="true" hidden="true">
+        <Size x="20" y="20"/>
+        <Layers>
+            <Layer level="ARTWORK">
+                <Texture parentKey="DotGridFill" file="Interface\Buttons\WHITE8X8" setAllPoints="true">
+                    <Color r="0.92" g="0.08" b="0.08" a="1"/>
+                </Texture>
+            </Layer>
+        </Layers>
+    </Frame>
+</Ui>

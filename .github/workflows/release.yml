@@ -1,0 +1,50 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Read the version from the toc and check it against the tag
+        id: ver
+        run: |
+          python - <<'PY'
+          import io, os, re, sys
+          toc = io.open("DotGrid/DotGrid.toc", encoding="utf-8").read()
+          ver = re.search(r"^## Version:\s*(\S+)", toc, re.M).group(1)
+          tag = os.environ.get("GITHUB_REF_NAME", "")
+          print("toc version:", ver, "| tag:", tag)
+          if tag.startswith("v") and tag[1:] != ver:
+              sys.exit("tag %s does not match ## Version: %s in DotGrid.toc" % (tag, ver))
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as fh:
+              fh.write("version=%s\n" % ver)
+          PY
+
+      - name: Install lupa and run the test suite before shipping
+        run: |
+          python -m pip install --upgrade pip lupa
+          DOTGRID_ADDON_DIR="$PWD/DotGrid" python tests/run_tests.py
+
+      - name: Package the addon folder exactly as users install it
+        run: |
+          cd DotGrid && zip -r "../DotGrid-${{ steps.ver.outputs.version }}.zip" . -x '*.bak' -x '*__pycache__*'
+
+      - name: Publish the release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: DotGrid-${{ steps.ver.outputs.version }}.zip
+          generate_release_notes: true
